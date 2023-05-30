@@ -1,0 +1,385 @@
+\documentclass[12pt, oneside,table]{report}
+%%%%%%%%%%%%%%%%%%%%% PACKAGES USED %%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx, tcolorbox, afterpage, tikz, fix-cm, amsthm, amsmath, amssymb, mathtools, amsfonts, xurl, array, hyperref, geometry, xcolor, charter, subfiles, cleveref, mathrsfs}
+\graphicspath{{./images/}}
+\geometry{a4paper,left=3cm,top=3cm,right=3cm,bottom=3cm}
+%%%%%%%%%%%%%%%%%%%%% CUSTOM COMMANDS %%%%%%%%%%%%%%%%%5%
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\renewcommand{\c}[1]{\mathcal{#1}} % uses package amssymb
+\newcommand{\s}[1]{\mathscr{#1}} % uses package mathrsfs
+\newcommand{\bb}[1]{\mathbb{#1}} % uses package amssymb
+\newcommand{\h}[1]{\widetilde{#1}}
+\newcommand{\term}[1]{\textbf{\emph{#1}}}
+\newcommand{\one}{\hspace*{0.5cm}$\rightarrow$ } %arrows in the bullet points
+\newcommand{\uvec}[1]{\boldsymbol{\hat{\textbf{#1}}}}
+\newcommand{\noi}{{\noindent}}
+\newcommand{\ms}{{\medskip}}
+\newcommand{\msni}{{\medskip \noindent}}
+\newcommand{\?}{\stackrel{?}{=}}
+\newcommand{\nl}{\bigskip}
+\newcommand{\bfit}[1]{\textbf{\textit{#1}}}
+\newcommand{\rv}{\textit{RV}}
+\newcommand{\normal}[2]{\mathbb{N}(#1,#2)}
+\newcommand{\given}[1]{\:#1\vert\:}
+\mathchardef\mhyphen="2D
+\setlength{\parindent}{0pt}
+\newcommand{\note}{\noindent\textbf{Note. }}
+\renewcommand{\proof}{\noindent\textbf{Proof. }}
+\makeatletter\newcommand\HUGE{\@setfontsize\Huge{35}{35}}\makeatother
+\newtheoremstyle{definition}
+  {}{}{}{}{\bfseries}{}{.5em}{{\thmname{#1 }}{\thmnumber{#2}}{\thmnote{ (#3)}}}
+\theoremstyle{definition}
+\newtheorem{example}{Example}
+\newtheorem{problem}{Problem}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{statement}{Statement}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\DeclareMathVersion{normal2}
+\usepackage{listings}
+\usepackage{lipsum}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[svgnames, table]{xcolor}
+\usepackage{tabularx, makecell, linegoal}
+%%%%%%%%%%%%%%%%%%%% START HERE %%%%%%%%%%%%%%%%%%%%
+%%%%%%% Enter Your Details here %%%%%%%%%%%%%%%%%%%%
+\renewcommand{\chaptername}{Lecture}
+\setcounter{chapter}{02} % if lec number is 'n' enter (n-1).
+\begin{document}
+\chapter{Gaussian Elimination - An Example} % enter lecture name/ topic here
+%
+Jan 2022 \ $|$ \ Himani Tokas  \\
+Lectures on Algorithms and Data Structure by Rakesh Nigam\\ 
+\section{Introduction}
+In Gaussian Elimination we try to solve certain equations, say n, by eliminating variables from these equations. The equations are of the form:
+\begin{equation}
+    A\overrightarrow{X} = \overrightarrow{b}
+\end{equation}
+Where, A is a matrix of size n$\times$n that consist of coefficients of the variables that are contained in $\overrightarrow{X}$ and $\overrightarrow{b}$ is a column vector that consists of equations R.H.S values. In this lecture we will pick up an example to understand the algorithm for same.
+\section{Understanding Through Example}
+\subsubsection{Set of Equations}
+We will be solving following set of equations.
+\begin{equation}
+    2x_{1}-3x_{2}+2x_{3}+5x_{4}=3
+\end{equation}
+\begin{equation}
+    x_{1}-x_{2}+x_{3}+2x_{4}=1
+\end{equation}
+\begin{equation}
+    3x_{1}+2x_{2}+2x_{3}-x_{4}=0
+\end{equation}
+\begin{equation}
+    x_{1}+x_{2}-3x_{3}-x_{4}=0
+\end{equation}
+We need to solve for:
+\begin{equation}
+    \overrightarrow{X}^{T} = (x_{1},x_{2},x_{3},x_{4})^{T}
+\end{equation}
+\subsubsection{Elimination Steps}
+\subsubsection{Step 1:}
+From equation 3.2, we get:
+\begin{equation}
+  x_{1} = \frac{3x_{2}-2x_{3}-5x_{4}+3}{2}  
+\end{equation}
+Substituting $x_{1}$ from 3.7 in equations 3.2, 3.3, 3.4 and 3.5.New set of equations is:
+\begin{equation}
+    2x_{1}-3x_{2}+2x_{3}+5x_{4}=3
+\end{equation}
+\begin{equation}
+    0x_{1}+0.5x_{2}+0x_{3}-0.5x_{4}=-0.5
+\end{equation}
+\begin{equation}
+    0x_{1}+6.5x_{2}-1x_{3}-8.5x_{4}=-4.5
+\end{equation}
+\begin{equation}
+    0x_{1}+2.5x_{2}-4x_{3}-3.5x_{4}=-1.5
+\end{equation}
+
+\boldsymbol{Observation: } $x_{1}$ is eliminated from equations 3.3, 3.4 and 3.5 using equation 3.1 and coefficient of $x_{1}$ from equation 3.2, i.e, 2 is pivot.
+\subsubsection{Step 2:}
+ From equation 3.9 we get:
+\begin{equation}
+     x_{2}=-1+x_{4}
+\end{equation}
+ Now, we substitute this in equations 3.10 and 3.11 and our set of equations change to following:
+\begin{equation}
+     2x_{1}-3x_{2}+2x_{3}+5x_{4}=3
+\end{equation}
+\begin{equation}
+    0x_{1}+0.5x_{2}+0x_{3}-0.5x_{4}=-0.5
+\end{equation}
+\begin{equation}
+    0x_{1}+0x_{2}-1x_{3}-2x_{4}=2
+\end{equation}
+\begin{equation}
+    0x_{1}+0x_{2}-4x_{3}-1x_{4}=1
+\end{equation}
+\boldsymbol{Observation: } $x_{2}$ is eliminated from equations 3.10 and 3.11 and pivot is the coefficient of $x_{2}$ from equation 3.9, i.e, 0.5.
+\subsubsection{Step 3:}
+From equation 3.15 we get:
+\begin{equation}
+    x_{3}=-2-2x_{4}
+\end{equation}
+Now, substituting this $x_{3}$ in equation 3.16, our final set of equation becomes:
+\begin{equation}
+    2x_{1}-3x_{2}+2x_{3}+5x_{4}=3
+\end{equation}
+\begin{equation}
+    0x_{1}+0.5x_{2}+0x_{3}-0.5x_{4}=-0.5
+\end{equation}
+\begin{equation}
+    0x_{1}+0x_{2}-1x_{3}-2x_{4}=2
+\end{equation}
+\begin{equation}
+    0x_{1}+0x_{2}+0x_{3}+7x_{4}=-7
+\end{equation}
+\boldsymbol{Observation: } $x_{3}$ is eliminated from equation 3.16 and pivot is coefficient of $x_{3}$ from equation 3.20, i.e., -1.
+
+Originally, matrix A was:
+\begin{equation}
+    A=\begin{pmatrix}
+       2 & -3 & 2 & 5\\
+       1 & -1 & 1 & 2\\
+       3 & 2 & 2 & -1\\
+       1 & 1 & -3 & -1
+    \end{pmatrix}
+\end{equation}
+Final matrix after applying the above four elimination steps is:
+\begin{equation}
+    U = \begin{pmatrix}
+      2&-3&2&5\\
+      0&0.5&0&-0.5\\
+      0&0&-1&-2\\
+      0&0&0&7
+     \end{pmatrix} 
+\end{equation}
+This final A matrix is U, i.e, upper triangular matrix.
+Similarly, originally $\overrightarrow{b}$ was:
+\begin{equation}
+    \overrightarrow{b}=\begin{pmatrix}
+    3\\
+    1\\
+    0\\
+    0
+    \end{pmatrix}
+\end{equation}
+After applying the three steps, new formed vector is:
+\begin{equation}
+    \overrightarrow{c}=\begin{pmatrix}
+    3\\
+    -0.5\\
+    2\\
+    7
+    \end{pmatrix}
+\end{equation}
+\subsubsection{Final Step:}
+Now, we need to solve the upper triangular system, U$\overrightarrow{X}$=$\overrightarrow{c}$ by backward substitution.
+Substituting $x_{4}$=-1, from equation 3.21 in equations 3.18, 3.19 and 3.20, we get:
+\begin{equation}
+   x_{3}=0 
+\end{equation}
+\begin{equation}
+    x_{2}=-2
+\end{equation}
+\begin{equation}
+    x_{1}=-4
+\end{equation}
+Hence, final solution is:
+\begin{equation}
+    \overrightarrow{X}^{T}=\left(x_{1},x_{2},x_{3},x_{4}\right)^{T}=\left(-4,-2,0,-1\right)
+\end{equation}
+\section{Idea of Elimination Algorithm}
+Operations performed during elimination algorithm are multiplication and subtraction. For multiplication, a multiplier is required. Let the multiplier be $m_{ij}$, where i and j represent row number and column number of matrix A. In \boldsymbol{step 1}, following elementary row operations are performed to eliminate $x_{1}$ from 3.3, 3.4 and 3.5:
+\begin{equation}
+\begin{matrix}
+    \left(2\right) \longleftarrow \left(2\right) - m_{21}\left(1\right);\\
+    \\
+    m_{21} = \frac{a_{21}}{a_{11}}=\frac{1}{2}=0.5
+    \end{matrix}
+\end{equation}
+\begin{equation}
+\begin{matrix}
+    \left(3\right) \longleftarrow \left(3\right) - m_{31}\left(1\right);\\
+    \\
+    m_{31} = \frac{a_{31}}{a_{11}}=\frac{3}{2}=1.5
+    \end{matrix}
+\end{equation}
+\begin{equation}
+\begin{matrix}
+    \left(4\right) \longleftarrow \left(4\right) - m_{41}\left(1\right);\\
+    \\
+    m_{41} = \frac{a_{41}}{a_{11}}=\frac{1}{2}=0.5
+    \end{matrix}
+\end{equation}
+In above equations, $a_{ij}$ are values from matrix A from row i and column j respectively and (1), (2), (3), (4) are rows of matrix A.
+Elementary matrix thus obtained will be:
+\begin{equation}
+    E_{1}=\begin{pmatrix}
+    1&0&0&0\\
+    -0.5&1&0&0\\
+    -1.5&0&1&0\\
+    -0.5&0&0&1
+    \end{pmatrix}
+\end{equation}
+Multiplying $E_{1}$ and A we get:
+\begin{equation}
+    E_{1}A=\begin{pmatrix}
+    2&-3&2&5\\
+    0&0.5&0&-0.5\\
+    0&6.5&-1&-8.5\\
+    0&2.5&-4&-3.5
+    \end{pmatrix}
+\end{equation}
+And, on multiplying $E_{1}$ and $\overrightarrow{b}$, we get:
+\begin{equation}
+    E_{1}\overrightarrow{b}=
+    \begin{pmatrix}
+    3\\
+    -0.5\\
+    -4.5\\
+    -1.5
+    \end{pmatrix}
+\end{equation}
+Elementary row operations performed while eliminating $x_{2}$ from last two equations are:
+\begin{equation}
+\begin{matrix}
+    \left(1\right) \longleftarrow \left(1\right) \\
+    
+    \end{matrix}
+\end{equation}
+\begin{equation}
+\begin{matrix}
+    \left(2\right) \longleftarrow \left(2\right) \\
+    
+    \end{matrix}
+\end{equation}
+\begin{equation}
+\begin{matrix}
+    \left(3\right) \longleftarrow \left(3\right) - m_{32}\left(2\right);\\
+    \\
+    m_{32} = \frac{a_{32}}{a_{22}}=\frac{6.5}{0.5}=13
+    \end{matrix}
+\end{equation}
+\begin{equation}
+\begin{matrix}
+    \left(4\right) \longleftarrow \left(4\right) - m_{42}\left(2\right);\\
+    \\
+    m_{42} = \frac{a_{42}}{a_{22}}=\frac{2.5}{0.5}=5
+    
+    \end{matrix}
+\end{equation}
+Elementary matrix obtained by these elementary row operations is as follows:
+\begin{equation}
+    E_{2}=\begin{pmatrix}
+    1&0&0&0\\
+    0&1&0&0\\
+    0&-13&1&0\\
+    0&-5&0&1
+    \end{pmatrix}
+\end{equation}
+Now, we multiply this with $E_{1}A$ and $E_{1}\overrightarrow{b}$.
+\begin{equation}
+    E_{2}\left(E_{1}A\right)=
+    \begin{pmatrix}
+    2&-3&2&5\\
+    0&0.5&0&-0.5\\
+    0&0&-1&-2\\
+    0&0&-4&-1
+    \end{pmatrix}
+\end{equation}
+and,
+\begin{equation}
+    E_{2}\left(E_{1}\overrightarrow{b}\right)=
+    \begin{pmatrix}
+    3\\
+    -0.5\\
+    2\\
+    1
+    \end{pmatrix}
+\end{equation}
+Elementary operations required for eliminating $x_{3}$ from last equation are:
+\begin{equation}
+\begin{matrix}
+    \left(1\right) \longleftarrow \left(1\right) \\
+    
+    
+    \end{matrix}
+\end{equation}
+\begin{equation}
+\begin{matrix}
+    \left(2\right) \longleftarrow \left(2\right)\\
+    \end{matrix}
+\end{equation}
+\begin{equation}
+\begin{matrix}
+    \left(3\right) \longleftarrow \left(3\right) \\
+    
+    \end{matrix}
+\end{equation}
+\begin{equation}
+\begin{matrix}
+    \left(4\right) \longleftarrow \left(4\right) - m_{43}\left(3\right);\\
+    \\
+    m_{43} = \frac{a_{43}}{a_{33}}=\frac{-4}{-1}=4
+    \end{matrix}
+\end{equation}
+Elementary matrix thus obtained is:
+\begin{equation}
+    E_{3}=\begin{pmatrix}
+    1&0&0&0\\
+    0&1&0&0\\
+    0&0&1&0\\
+    0&0&-4&1
+    \end{pmatrix}
+\end{equation}
+Multiplying this with $E_{2}E_{1}A$ and $E_{2}E_{1}\overrightarrow{b}$, we get following:
+\begin{equation}
+    E_{3}\left(E_{2}E_{1}A\right)=
+    \begin{pmatrix}
+    2&-3&2&5\\
+    0&0.5&0&-0.5\\
+    0&0&-1&-2\\
+    0&0&0&7
+    \end{pmatrix}=U
+\end{equation}
+And,
+\begin{equation}
+    E_{3}\left(E_{2}E_{1}\overrightarrow{b}\right)=
+    \begin{pmatrix}
+    3\\
+    -0.5\\
+    2\\
+    -7
+    \end{pmatrix}=\overrightarrow{c}
+\end{equation}
+Since, 
+\begin{equation}
+\begin{matrix}
+    \left(E_{3}E_{2}E_{1}\right)A=U\\
+    \Rightarrow A=\left(E_{3}E_{2}E_{1}\right)^{-1}U=LU\\
+    \end{matrix}
+\end{equation}
+\boldsymbol{Observation: } 'n-1' steps are required for an $n\times n$ matrix.\\
+\section{Computational Analysis}
+Let A$\overrightarrow{X}=\overrightarrow{b}$; A is $n\times n$ matrix. Suppose we are in step number 'k', then following two computations will take place:
+
+\begin{enumerate}
+    \item Multiplier Computation (involving division):
+    \begin{equation}
+        m_{ik}=\frac{a_{ik}^{\left(k\right)}}{a_{kk}^{\left(k\right)}}
+    \end{equation}
+    \item Sub-matrix Computation for A and $\overrightarrow{b}$:
+    \begin{equation}
+        \begin{matrix}
+            
+        a_{ij}^{\left(k+1\right)}=a_{ij}^{\left(k\right)}-m_{ik}a_{kj}^{\left(k\right)}\\
+        b_{i}^{\left(k+1\right)}=b_{i}^{\left(k\right)}b_{k}^{\left(k\right)}
+        \end{matrix}
+    \end{equation}
+\end{enumerate}
+Multiplications and divisions are significant computations as compared to additions and subtractions. 
+\end{document}
+
